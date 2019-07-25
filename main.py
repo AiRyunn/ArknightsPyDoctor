@@ -40,13 +40,13 @@ def get_digit(img):
     img = cv2.copyMakeBorder(img, 0, 0, 30, 30, cv2.BORDER_CONSTANT, value=0)
     sim = [None] * 11
     for i in range(10):
-        img_digit = imread_cached(f"digit_{i}.png", flags=cv2.IMREAD_GRAYSCALE)
-        print(img.shape, img_digit.shape)
+        img_digit = imread_cached(f"images/digit_{i}.png", flags=cv2.IMREAD_GRAYSCALE)
+        # print(img.shape, img_digit.shape)
         res = cv2.matchTemplate(img, img_digit, cv2.TM_CCOEFF_NORMED)
         sim[i] = cv2.minMaxLoc(res)[1]
 
-    img_sep = imread_cached(f"sep.png", flags=cv2.IMREAD_GRAYSCALE)
-    print(img.shape, img_sep.shape)
+    img_sep = imread_cached(f"images/sep.png", flags=cv2.IMREAD_GRAYSCALE)
+    # print(img.shape, img_sep.shape)
     res = cv2.matchTemplate(img, img_sep, cv2.TM_CCOEFF_NORMED)
     sim[10] = cv2.minMaxLoc(res)[1]
 
@@ -58,7 +58,7 @@ def get_digit(img):
 
 
 def get_progress():
-    if not screen_match("fighting.png"):
+    if not screen_match("images/fighting.png"):
         return 99999, -1
 
     screenshot = cv2.imread("screenshot.png", cv2.IMREAD_GRAYSCALE)
@@ -66,7 +66,6 @@ def get_progress():
     img = cv2.resize(img, (img.shape[1] * 4, img.shape[0] * 4))
     _, img_bin = cv2.threshold(img, 192, 255, cv2.THRESH_BINARY)
 
-    cnt = 0
     width = img_bin.shape[1]
     col = 0
 
@@ -77,7 +76,6 @@ def get_progress():
             col += 1
         r = col
         if l != r:
-            cnt += 1
             digit = get_digit(img_bin[:, l:r])
             if digit < 0:
                 sep = True
@@ -86,18 +84,19 @@ def get_progress():
             else:
                 b = b * 10 + digit
         col += 1
+
     return a, b
 
 
 def work():
-    if not screen_match("start.png"):
+    if not screen_match("images/start.png"):
         raise Exception("failed to start: please select mission")
 
     print("start!")
     tap_screen(2091, 1008)
     time.sleep(1)
 
-    if screen_match("sanity.png"):
+    if screen_match("images/sanity.png"):
         raise Exception("failed to start: lack of sanity")
 
     print("fighting!")
@@ -107,6 +106,7 @@ def work():
     a, b = -1, -1
     while b < 0:
         a, b = get_progress()
+        time.sleep(1)
 
     for i in tqdm(range(b)):
         while i >= a:
@@ -119,7 +119,7 @@ def work():
     for _ in range(3):
         tap_screen(583, 303)
         time.sleep(10)
-        if screen_match("start.png"):
+        if screen_match("images/start.png"):
             return
 
     raise Exception("unknown error")
