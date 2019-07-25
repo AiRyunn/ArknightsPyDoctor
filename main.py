@@ -72,7 +72,7 @@ def get_progress():
     a, b, sep = 0, 0, False
     while col < width:
         l = col
-        while np.sum(img_bin[:, col]) > 0:
+        while col < width and np.sum(img_bin[:, col]) > 0:
             col += 1
         r = col
         if l != r:
@@ -84,6 +84,10 @@ def get_progress():
             else:
                 b = b * 10 + digit
         col += 1
+
+    # Fix digital occlusion in special cases
+    if b == 0:
+        return 0, 0
 
     return a, b
 
