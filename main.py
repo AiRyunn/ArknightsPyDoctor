@@ -12,8 +12,7 @@ play_times = 6
 
 
 def get_screenshot():
-    os.system("adb shell screencap -p /sdcard/screenshot.png")
-    os.system("adb pull /sdcard/screenshot.png screenshot.png>/dev/null")
+    os.system("adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > screenshot.png")
     return "screenshot.png"
 
 
@@ -41,12 +40,10 @@ def get_digit(img):
     sim = [None] * 11
     for i in range(10):
         img_digit = imread_cached(f"images/digit_{i}.png", flags=cv2.IMREAD_GRAYSCALE)
-        # print(img.shape, img_digit.shape)
         res = cv2.matchTemplate(img, img_digit, cv2.TM_CCOEFF_NORMED)
         sim[i] = cv2.minMaxLoc(res)[1]
 
     img_sep = imread_cached(f"images/sep.png", flags=cv2.IMREAD_GRAYSCALE)
-    # print(img.shape, img_sep.shape)
     res = cv2.matchTemplate(img, img_sep, cv2.TM_CCOEFF_NORMED)
     sim[10] = cv2.minMaxLoc(res)[1]
 
@@ -119,12 +116,11 @@ def work():
         time.sleep(0.1)
 
     print("end")
-    time.sleep(10)
     for _ in range(3):
-        tap_screen(583, 303)
-        time.sleep(10)
         if screen_match("images/start.png"):
             return
+        tap_screen(583, 303)
+        time.sleep(10)
 
     raise Exception("unknown error")
 
