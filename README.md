@@ -1,6 +1,8 @@
 # 明日方舟辅助
 
-## Usage
+明日方舟安卓客户端自动刷图
+
+## Installation
 
 ### Install adb
 
@@ -26,11 +28,13 @@ DXLNW***********	device
 > pip3 install -r requirements.txt
 ```
 
+## Usage
+
 ### Settings
 
 设置执行次数： 修改 `main.py` 中 `play_times` 
 
-## Run
+### Run
 
 1. 选择关卡，不要点“开始行动”
 

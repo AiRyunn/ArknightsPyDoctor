@@ -8,7 +8,7 @@ from tqdm import tqdm
 import cv2
 import numpy as np
 
-play_times = 6
+play_times = 3
 
 
 def get_screenshot():
@@ -125,6 +125,7 @@ def work():
     raise Exception("unknown error")
 
 
+# print(get_progress())
 for _ in range(play_times):
     try:
         work()
