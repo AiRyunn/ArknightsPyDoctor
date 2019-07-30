@@ -8,11 +8,11 @@ from tqdm import tqdm
 import cv2
 import numpy as np
 
-play_times = 3
+play_times = 6
 
 
 def get_screenshot():
-    os.system("adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > screenshot.png")
+    os.system("adb shell screencap -p > screenshot.png")
     return "screenshot.png"
 
 
@@ -61,7 +61,7 @@ def get_progress():
     screenshot = cv2.imread("screenshot.png", cv2.IMREAD_GRAYSCALE)
     img = screenshot[30:64, 1046:1211]
     img = cv2.resize(img, (img.shape[1] * 4, img.shape[0] * 4))
-    _, img_bin = cv2.threshold(img, 192, 255, cv2.THRESH_BINARY)
+    _, img_bin = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)  # fade in
 
     width = img_bin.shape[1]
     col = 0
@@ -117,10 +117,10 @@ def work():
 
     print("end")
     for _ in range(3):
+        time.sleep(10)
         if screen_match("images/start.png"):
             return
         tap_screen(583, 303)
-        time.sleep(10)
 
     raise Exception("unknown error")
 
